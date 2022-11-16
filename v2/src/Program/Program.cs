@@ -11,6 +11,7 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
+using Ucu.Poo.Locations.Client;
 
 namespace Ucu.Poo.TelegramBot
 {
@@ -95,15 +96,18 @@ namespace Ucu.Poo.TelegramBot
         public static void Main()
         {
             Start();
+            LocationApiClient client = new LocationApiClient();
 
             Bot = new TelegramBotClient(token);
 
             firstHandler =
+                new HelpHandler(
                 new HelloHandler(
-                new DireccionHandler(
+                new PhotoHandler(null,
                 new GoodByeHandler(
-                new PhotoHandler(Bot, null)
-            )));
+                new AddressHandler(new AddressFinder(client),
+                new DistanceHandler(new DistanceCalculator(client), null)
+                )))));
 
             var cts = new CancellationTokenSource();
 

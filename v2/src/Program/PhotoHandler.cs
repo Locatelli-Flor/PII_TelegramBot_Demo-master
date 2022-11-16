@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,8 +36,8 @@ namespace Ucu.Poo.TelegramBot
         /// <returns>true si el mensaje fue procesado; false en caso contrario.</returns>
         protected override void InternalHandle(Message message, out string response)
         {
-            AsyncContext.Run(() => SendProfileImage(message));
-            response = string.Empty;
+            AsyncContext.Run(() => this.SendProfileImage(message));
+             response = String.Empty;
         }
 
         /// <summary>
@@ -45,19 +46,18 @@ namespace Ucu.Poo.TelegramBot
         private async Task SendProfileImage(Message message)
         {
             // Can be null during testing
-            if (bot != null)
+            if (this.bot != null)
             {
-                await bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
+                await this.bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
 
                 const string filePath = @"profile.jpeg";
                 using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
                 var fileName = filePath.Split(Path.DirectorySeparatorChar).Last();
 
-                await bot.SendPhotoAsync(
+                await this.bot.SendPhotoAsync(
                     chatId: message.Chat.Id,
                     photo: new InputOnlineFile(fileStream, fileName),
-                    caption: "Mallonesa"
-                );
+                    caption: "Te ves bien!");
             }
         }
     }
